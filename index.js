@@ -14,6 +14,37 @@ const calcRendimento = (valor) => {
     return resultado
 }
 
+const encontraValores = (lancamentos, categoriaDaDespesa) => {
+    let receita = 0
+    let despesa = 0
+
+    lancamentos.forEach(lancamentos => {
+        if(lancamentos.tipo == 'receita'){
+            receita += lancamentos.valor
+        }
+    })
+
+    for(encontrarDespesa of lancamentos){
+        if(encontrarDespesa.categoria == categoriaDaDespesa){
+            despesa = encontrarDespesa.valor
+            break
+        }
+    }
+
+    const valoresEncontrados = [receita, despesa]
+    return valoresEncontrados
+}
+
+const calcPorcentagem = (lancamentos, categoriaDaDespesa) => {
+    let valores = encontraValores(lancamentos, categoriaDaDespesa)
+    let resultado = 0
+
+    resultado = (valores[1] / valores[0]) * 100 
+    resultado = arredondar(resultado)
+
+    return resultado
+}
+
 const calcularSaldo = (lancamentos) => {
     let saldo = 0
     lancamentos.forEach(lancamentos => {
@@ -53,3 +84,4 @@ const saldoJaneiro = calcularSaldo (lancamentosJaneiro)
 
 console.log(`entre entradas e saidas do mes de janeiro o saldo é de ${saldoJaneiro}`)
 
+console.log(`o alugel corespode a ${calcPorcentagem(lancamentosJaneiro, "aluguel")}% do valor do salário do usúario`)
