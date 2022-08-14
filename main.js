@@ -29,3 +29,56 @@ const ano = new Ano()
 ano.adicionarMes(janeiro)
 ano.adicionarMes(fevereiro)
 ano.calcularSaldo()
+
+const addElement = (parent, elementType, text) => {
+
+    const element = document.createElement(elementType)
+
+    if(text){
+        element.innerText = text
+    }
+
+    parent.appendChild(element)
+}
+
+function renderizar (){
+    const app = document.querySelector("#app")
+    if(app.firstChild){
+        app.firstChild.remove()
+    }
+    const painel = document.createElement("div")
+
+    for(const mes of ano.meses){
+        addElement(painel, "h3", mes.nome)
+    
+        for(const lancamento of mes.lancamentos){
+            const detalhesLancamento = lancamento.categoria + " " + lancamento.tipo + " " + lancamento.valor
+            addElement(painel, "p", detalhesLancamento)
+        }
+
+        addElement(painel, "h4", mes.totalizador.saldo)
+        addElement(painel, "hr")
+
+    }
+    app.appendChild(painel)
+    
+}
+
+renderizar()
+
+function adicionarLacamento(){
+    const mes = document.querySelector('#mes').value
+    const categoria = document.querySelector("#categoria").value
+    const tipo = document.querySelector("#tipo").value
+    const valor = document.querySelector('#valor').value
+    ano.adicionarLancamento(mes, new Lancamento(categoria, tipo, parseFloat(valor)))
+    ano.calcularSaldo()
+    renderizar()
+    document.querySelector('#valor').value = ""   
+    document.querySelector('#categoria').value = "" 
+    document.querySelector('#tipo').value = "" 
+    document.querySelector('#mes').value = ""
+}
+
+const botao = document.querySelector('#botao')
+botao.addEventListener("click", adicionarLacamento)
