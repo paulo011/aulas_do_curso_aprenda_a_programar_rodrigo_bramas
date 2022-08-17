@@ -46,20 +46,72 @@ function renderizar (){
     if(app.firstChild){
         app.firstChild.remove()
     }
+
     const painel = document.createElement("div")
+
+    const cores = ["red", "red", "red", "blue"]
+    const grafico = document.createElement("div")
+    grafico.className = "grafico"
+    painel.appendChild(grafico)
+    for(const mes of ano.meses){
+        const coluna = document.createElement("div")
+        coluna.className = 'grafico-coluna'
+        const cor = document.createElement("div")
+        let width = (mes.totalizador.saldo * 100) /100
+        cor.style.height =  width + "px"
+        cor.style.width = '150px'
+        cor.style.background = cores.pop()
+        const nomeDoMes = document.createElement("div")
+        nomeDoMes.innerText = mes.nome
+        nomeDoMes.style.textAlign = "center"
+        coluna.appendChild(cor)
+        coluna.appendChild(nomeDoMes)
+
+        grafico.appendChild(coluna)
+    }
+
 
     for(const mes of ano.meses){
         addElement(painel, "h3", mes.nome)
-    
+        const tabelaLancamentos = document.createElement("table")   
+        tabelaLancamentos.className = "tabela-lancamentos"
+
+        const linhaTitulo = document.createElement("tr")
+
+        addElement(linhaTitulo, "th", "Categoria")
+        addElement(linhaTitulo, "th", "Valor")
+        tabelaLancamentos.appendChild(linhaTitulo)
+
         for(const lancamento of mes.lancamentos){
-            const detalhesLancamento = lancamento.categoria + " " + lancamento.tipo + " " + lancamento.valor
-            addElement(painel, "p", detalhesLancamento)
+            const linhalancamentos = document.createElement("tr")
+            addElement(linhalancamentos, "td", lancamento.categoria)
+            addElement(linhalancamentos, "td", lancamento.tipo === "receita"? "+ "+ formatarDinheiro(lancamento.valor) : "- "+ formatarDinheiro(lancamento.valor))
+            tabelaLancamentos.appendChild(linhalancamentos)
         }
 
-        addElement(painel, "h4", mes.totalizador.saldo)
+        const linhaSaldo = document.createElement("tr")
+
+        addElement(linhaSaldo, "th", "Total")
+        addElement(linhaSaldo, "th", formatarDinheiro(mes.totalizador.saldo))
+        tabelaLancamentos.appendChild(linhaSaldo)
+        
+        const linhaJuros = document.createElement("tr")
+
+        addElement(linhaJuros, "th", "Jutros")
+        addElement(linhaJuros, "th",mes.totalizador.juros !== 0 ? " " + formatarDinheiro(mes.totalizador.juros) : "R$ 0")
+        tabelaLancamentos.appendChild(linhaJuros)
+        
+        const linhaRendementos = document.createElement("tr")
+
+        addElement(linhaRendementos, "th", "Rendimentos")
+        addElement(linhaRendementos, "th", mes.totalizador.rendimentos !== 0 ? " " +formatarDinheiro(mes.totalizador.rendimentos) : "R$ 0")
+        tabelaLancamentos.appendChild(linhaRendementos)
+
+        painel.appendChild(tabelaLancamentos)
         addElement(painel, "hr")
 
     }
+
     app.appendChild(painel)
     
 }
@@ -76,9 +128,18 @@ function adicionarLacamento(){
     renderizar()
     document.querySelector('#valor').value = ""   
     document.querySelector('#categoria').value = "" 
-    document.querySelector('#tipo').value = "" 
-    document.querySelector('#mes').value = ""
+    document.querySelector('#tipo').value = "receita" 
+    document.querySelector('#mes').value = ano.meses[0].nome
 }
 
 const botao = document.querySelector('#botao')
 botao.addEventListener("click", adicionarLacamento)
+
+
+const mesSelect = document.getElementById("mes")
+for (const mes of ano.meses){
+    const option = document.createElement("option")
+    option.text = mes.nome
+    mesSelect.add(option)
+
+}
