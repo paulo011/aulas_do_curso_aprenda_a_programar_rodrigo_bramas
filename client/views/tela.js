@@ -1,36 +1,22 @@
 class Tela{
     constructor(){
-        this.janeiro = new Mes("janeiro")
-
-        this.janeiro.adicionarLacamento(new Lancamento('salário','receita', 3000))
-        this.janeiro.adicionarLacamento(new Lancamento('aluguel','despesa' ,1000)) 
-        this.janeiro.adicionarLacamento(new Lancamento('conta de luz', 'despesa' ,200))
-        this.janeiro.adicionarLacamento(new Lancamento('conta de água','despesa' ,100))
-        this.janeiro.adicionarLacamento(new Lancamento('internet','despesa' ,100))
-        this.janeiro.adicionarLacamento(new Lancamento('transporte','despesa' ,300))
-        this.janeiro.adicionarLacamento(new Lancamento('lazer','despesa' ,300))
-        this.janeiro.adicionarLacamento(new Lancamento('alimentação','despesa' ,500))
-        this.janeiro.adicionarLacamento(new Lancamento("condomínio", "despesa", 300))
-        this.janeiro.adicionarLacamento(new Lancamento("Farmácia", "despesa", 100))
-
-        this.fevereiro = new Mes("fevereiro")
-
-        this.fevereiro.adicionarLacamento(new Lancamento('salário','receita', 3000))
-        this.fevereiro.adicionarLacamento(new Lancamento('aluguel','despesa' ,1200)) 
-        this.fevereiro.adicionarLacamento(new Lancamento('conta de luz', 'despesa' ,250))
-        this.fevereiro.adicionarLacamento(new Lancamento('conta de água','despesa' ,100))
-        this.fevereiro.adicionarLacamento(new Lancamento('internet','despesa' ,100))
-        this.fevereiro.adicionarLacamento(new Lancamento('transporte','despesa' ,500))
-        this.fevereiro.adicionarLacamento(new Lancamento('lazer','despesa' ,1000))
-        this.fevereiro.adicionarLacamento(new Lancamento('alimentação','despesa' ,400))
-
-        this.ano = new Ano()
-        this.ano.adicionarMes(this.janeiro)
-        this.ano.adicionarMes(this.fevereiro)
-        this.ano.calcularSaldo()
-
+        this.init()
     }
 
+    async init(){
+        const response = await fetch("http://localhost:5000/api/lancamentos")
+        const lancamentos = await response.json()
+        const ano = new Ano()
+        ano.adicionarMes(new Mes("janeiro"))
+        ano.adicionarMes(new Mes("fevereiro"))
+        ano.adicionarMes(new Mes("março"))
+        for(const lancamento of lancamentos){
+            ano.adicionarLancamento(lancamento.mes, new Lancamento(lancamento.categoria, lancamento.tipo, parseFloat(lancamento.valor)))
+        }
+        ano.calcularSaldo()
+        this.ano = ano
+        this.renderizar()
+    }
     formatarDinheiro (valor){
         return new Intl.NumberFormat("pt-br", { currency: "BRL", style: 'currency'}).format(valor)
     }
@@ -93,6 +79,7 @@ class Tela{
         const tipo = document.querySelector("#tipo").value
         const valor = document.querySelector('#valor').value
         this.ano.adicionarLancamento(mes, new Lancamento(categoria, tipo, parseFloat(valor)))
+        fetch("http://localhost:5000/api/lancamentos", {method: "post",headers:{"content-type": "application/json"}, body: JSON.stringify({mes: mes, categoria: categoria, tipo: tipo, valor: valor})})
         this.ano.calcularSaldo()
         this.renderizar()
         document.querySelector('#valor').value = ""   

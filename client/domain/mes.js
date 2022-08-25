@@ -8,7 +8,7 @@ class Mes{
     }
 
     arredondar (valor) {
-    return Math.round(valor * 100)/ 100
+    return Math.round(parseFloat(valor) * 100)/ 100
     }
 
     adicionarLacamento(lancamento){

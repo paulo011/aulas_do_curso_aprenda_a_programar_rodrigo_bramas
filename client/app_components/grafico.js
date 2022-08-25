@@ -10,7 +10,7 @@ class Grafico{
         const coluna = document.createElement("div")
         coluna.className = "grafico-coluna"
         const cor = document.createElement("div")
-        const tamanho = (valor*100)/1000
+        const tamanho = (valor*100)/10000
         cor.style.height = `${tamanho}px`
         cor.style.background = this.cores.pop()
         coluna.appendChild(cor)
