@@ -11,7 +11,7 @@ class Tela{
         ano.adicionarMes(new Mes("fevereiro"))
         ano.adicionarMes(new Mes("março"))
         for(const lancamento of lancamentos){
-            ano.adicionarLancamento(lancamento.mes, new Lancamento(lancamento.categoria, lancamento.tipo, parseFloat(lancamento.valor)))
+            ano.adicionarLancamento(lancamento.mes, new Lancamento(lancamento.categoria, lancamento.tipo, parseFloat(lancamento.valor), lancamento.idLancamento))
         }
         ano.calcularSaldo()
         this.ano = ano
@@ -57,12 +57,18 @@ class Tela{
         for(const mes of this.ano.meses){
             const nomeDoMes = new H4(mes.nome)
             app.adicionarElementoFilho(nomeDoMes.element)
-
             const tabelaLancamentos = new Tabela("tabela-lancamentos")
             tabelaLancamentos.addRow("th",["Categoria", "Valor"] )
+
             for(const lancamento of mes.lancamentos){
-                const lancamentoTipo =  this.formatarDinheiro(lancamento.getValorString())
-                tabelaLancamentos.addRow("td", [ lancamento.categoria, lancamentoTipo])
+                const button = new Button ("delete-lancamento", "delete")
+                button.addListener(()=> {
+                    this.deletarLancamento(lancamento.idLancamento)
+                    this.ano.deletarLancamento(mes, lancamento)
+                    this.renderizar()
+                    
+                })
+                tabelaLancamentos.addRow("td", [lancamento.categoria, this.formatarDinheiro(lancamento.getValorString())], [button])
             }
             tabelaLancamentos.addRow("th", [ "Total", this.formatarDinheiro(mes.totalizador.saldo)])
             tabelaLancamentos.addRow("th", ["Juros", mes.totalizador.juros !== 0 ? " " + this.formatarDinheiro(mes.totalizador.juros) : "R$ 0"])
@@ -86,5 +92,16 @@ class Tela{
         document.querySelector('#categoria').value = "" 
         document.querySelector('#tipo').value = "receita" 
         document.querySelector('#mes').value = this.ano.meses[0].nome
+    }
+
+   // deletarLancamento (idLancamento) {
+     //   console.log("metodo deletelancamento id do argumento "+ idLancamento)
+		//fetch("http://localhost:5000/api/lancamentos/" + idLancamento, { method: "delete" });
+	//}
+    deletarLancamento(idLancamento){
+        console.log(idLancamento)
+        fetch(`http://localhost:5000/api/lancamentos/${idLancamento}`, {method: "delete"})
+        //this.ano.calcularSaldo()
+        //this.renderizar()
     }
 }

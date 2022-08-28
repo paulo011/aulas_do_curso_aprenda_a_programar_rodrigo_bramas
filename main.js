@@ -1,0 +1,10 @@
+const Connection = require("./server/connection")
+const LancamentoController = require("./server/LancamentoController")
+const LancamentoData = require("./server/LancamentoData")
+const Httpserver = require("./server/httpServer")
+
+const connection = new Connection()
+const lancamentoData = new LancamentoData(connection)
+const httpServer = new Httpserver()
+new LancamentoController(httpServer, lancamentoData)
+httpServer.listen(5000)

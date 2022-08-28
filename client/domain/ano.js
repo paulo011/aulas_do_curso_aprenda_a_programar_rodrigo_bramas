@@ -15,6 +15,9 @@ class Ano{
             }
         }
     }
+    deletarLancamento(mes, lancamento){
+        mes.lancamentos.splice(mes.lancamentos.indexOf(lancamento), 1)
+    }
     calcularSaldo(){
         let saldoInicial = 0
         for (const mes of this.meses ){

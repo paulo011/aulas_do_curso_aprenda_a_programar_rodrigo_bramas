@@ -4,7 +4,7 @@ class Tabela {
         this.element.className = className
     }
 
-    addRow(type, values){
+    addRow(type, values, buttons){
         const tr = document.createElement("tr")
 
         for(const value of values){
@@ -13,6 +13,13 @@ class Tabela {
         tr.appendChild(td)
         }
 
+        if(buttons){
+            for(const button of buttons){
+            const td = document.createElement(type)
+            td.append(button.element)
+            tr.appendChild(td)
+            }
+        }
        this.element.appendChild(tr)
     }
 }

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/paulo011/aulas_do_curso_aprenda_a_programar_rodrigo_bramas#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "nodemon": "^2.0.19",
     "pg-promise": "^10.11.1"
   }
 }
