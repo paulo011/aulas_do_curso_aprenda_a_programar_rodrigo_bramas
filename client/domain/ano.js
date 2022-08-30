@@ -1,3 +1,4 @@
+
 class Ano{
     constructor(){
         this.meses = []
@@ -8,6 +9,9 @@ class Ano{
 
     }
     adicionarLancamento (nomesDoMes, Lancamento){
+        if(!this.meses.some(mes => mes.nome === nomesDoMes)){
+            this.adicionarMes(new Mes(nomesDoMes))
+        }
         for(const mes of this.meses){
             if (mes.nome === nomesDoMes){
                 mes.adicionarLacamento(Lancamento)

@@ -3,7 +3,7 @@ class Grafico{
     constructor(){
         this.element = document.createElement("div")
         this.element.className = "grafico"
-        this.cores = ["red", "yellow", "green", "blue"]
+        this.cores = ["red", "yellow", "green", "blue", "orange"]
     }
 
     adicionarColuna(valor, descricao){

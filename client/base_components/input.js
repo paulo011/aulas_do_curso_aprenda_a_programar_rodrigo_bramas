@@ -5,4 +5,8 @@ class Input{
         this.element.type = type
         this.element.placeholder = placeholder
     }
+    getValue(){
+        if(this.element.type === "numeber") return this.element.valueAsNumber
+        return this.element.value
+    }
 }

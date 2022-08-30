@@ -9,4 +9,8 @@ class Select {
         option.text = text
         this.element.appendChild(option)
     }
+
+    getValue(){
+        return this.element.value
+    }
 }
